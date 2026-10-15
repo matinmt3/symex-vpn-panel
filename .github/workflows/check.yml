@@ -1,0 +1,21 @@
+name: Check local panel source
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Install local test runtimes
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y php-cli python3
+      - name: Check isolated PHP and parser behavior
+        run: python3 -m unittest discover -s tests -v
